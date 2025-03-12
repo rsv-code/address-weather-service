@@ -1,0 +1,47 @@
+{
+	"info": {
+		"_postman_id": "958f88fa-72c5-4ecb-8fb0-5488de0adc03",
+		"name": "address-weather-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36130333"
+	},
+	"item": [
+		{
+			"name": "forecast",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/forecast?street=1261 Pleasant Grove Blvd&city=Roseville&state=CA&zipcode=95747",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"forecast"
+					],
+					"query": [
+						{
+							"key": "street",
+							"value": "1261 Pleasant Grove Blvd"
+						},
+						{
+							"key": "city",
+							"value": "Roseville"
+						},
+						{
+							"key": "state",
+							"value": "CA"
+						},
+						{
+							"key": "zipcode",
+							"value": "95747"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
