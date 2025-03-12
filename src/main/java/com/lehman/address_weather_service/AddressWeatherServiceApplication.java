@@ -111,27 +111,27 @@ public class AddressWeatherServiceApplication {
 		String address = street + ", " + city + ", " + state + " " + zipcode;
 		response.setContentType("application/json");
 
-		logger.info("Attempting to get zipcode " + zipcode + " from the cache.");
+		logger.debug("Attempting to get zipcode " + zipcode + " from the cache.");
 		String forecastStr = this.cache.getIfPresent(zipcode);
 		if (forecastStr != null) {
 			// Cached forecast found, return it from cache.
-			logger.info("Cache hit for zipcode " + zipcode + ".");
+			logger.debug("Cache hit for zipcode " + zipcode + ".");
 			return this.formatResult(forecastStr, true);
 		} else {
 			// Cache miss, attempt to get the geocoded
 			// coordinates from the Census Bureau.
-			logger.info("Cache miss for zipcode " + zipcode + ".");
+			logger.debug("Cache miss for zipcode " + zipcode + ".");
 			CensusGovGeocodeClient geoCodeService = new CensusGovGeocodeClient(this.weatherServiceUrl);
 			try {
 				Coordinates coordinates = geoCodeService.geocode(street, city, state, zipcode);
 				if (coordinates != null) {
-					logger.info("Found coordinates " + coordinates.toString() + " for address: '" + address + "'");
+					logger.debug("Found coordinates " + coordinates.toString() + " for address: '" + address + "'");
 
 					NwsGovClient nwsGovClient = new NwsGovClient(this.nwsServiceUrl);
 					forecastStr = nwsGovClient.getForecast(coordinates);
 
 					// Add to cache for zipcode.
-					logger.info("Adding " + zipcode + " to the cache.");
+					logger.debug("Adding " + zipcode + " to the cache.");
 					this.cache.put(zipcode, forecastStr);
 
 					return this.formatResult(forecastStr, false);
@@ -139,11 +139,12 @@ public class AddressWeatherServiceApplication {
 					logger.warn("No coordinates found for address: '" + address + "'");
 				}
 			} catch (JsonProcessingException e) {
+				logger.error("JsonProcessingException: " + e.getMessage());
 				throw new RuntimeException(e);
 			}
 		}
 
-        return "error";
+        return "{ \"success\": false, \"message\": \"Forecast not found for the provided address.\" }";
     }
 
 	/**
